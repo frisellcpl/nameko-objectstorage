@@ -27,6 +27,36 @@ class Connection(object):
         r = requests.get(url, auth=self.auth)
         return [line.decode('utf-8') for line in r.iter_lines()]
 
+    def get_binary(self, container, object_name):
+        url = self._construct_object_url(container, object_name)
+        r = requests.get(url, auth=self.auth)
+        print(r)
+        return io.BytesIO(r.content)
+
+    def get_object_metadata(self, container, object_name):
+        url = self._construct_object_url(container, object_name)
+        r = requests.head(url, auth=self.auth)
+        
+        return r.headers
+
+    def delete_object(self, container, object_name):
+        url = self._construct_object_url(container, object_name)
+        r = requests.delete(url, auth=self.auth)
+
+    def list_objects(self, container):
+        url = self._construct_list_objects_url(container)
+        r = requests.get(url, auth=self.auth)
+        
+        return [line.decode('utf-8') for line in r.iter_lines()]
+
+    def _construct_list_objects_url(self, container):
+        return 'https://{0}/{1}/AUTH_{2}/{3}'.format(
+            self.config['access_point'],
+            self.config['api_version'],
+            self.config['project_id'],
+            container
+        )
+        
     def _construct_object_url(self, container, object_name):
         return 'https://{0}/{1}/AUTH_{2}/{3}/{4}'.format(
             self.config['access_point'],
