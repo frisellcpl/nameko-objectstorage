@@ -30,7 +30,7 @@ class Connection(object):
     def get_binary(self, container, object_name):
         url = self._construct_object_url(container, object_name)
         r = requests.get(url, auth=self.auth)
-        print(r)
+        
         return io.BytesIO(r.content)
 
     def get_object_metadata(self, container, object_name):
