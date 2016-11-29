@@ -1,6 +1,7 @@
 import requests
 from requests.auth import AuthBase
 from nameko.extensions import DependencyProvider
+from StringIO import StringIO
 
 
 class ObjectStorage(DependencyProvider):
@@ -22,10 +23,16 @@ class Connection(object):
 
     def get_object(self, container, object_name):
         url = self._construct_object_url(container, object_name)
-        # TODO: chunk download! Probably using closing
 
-        r = requests.get(url, auth=self.auth)
-        return [line.decode('utf-8') for line in r.iter_lines()]
+        r = requests.get(url, auth=self.auth, stream=True)
+        output = StringIO()
+
+        for chunk in r.iter_content(chunk_size=1024):
+            if chunk:
+                output.write(chunk)
+
+        output.seek(0)
+        return output
 
     def _construct_object_url(self, container, object_name):
         return 'https://{0}/{1}/AUTH_{2}/{3}/{4}'.format(
