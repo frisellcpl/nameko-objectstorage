@@ -76,7 +76,7 @@ class Connection(object):
         )
 
     def _construct_object_url(self, container, object_name):
-        return 'https://{0}/{1}'.format(
+        return '{0}/{1}'.format(
             self._construct_container_url(container),
             object_name
         )
