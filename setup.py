@@ -10,7 +10,7 @@ setup(
     url='http://github.com/frisellcpl/nameko-objectstorage',
     packages=['nameko_objectstorage'],
     install_requires=[
-        "nameko==2.4.3"
+        "nameko==2.14.0"
     ],
     zip_safe=True,
     license='Apache License, Version 2.0',
